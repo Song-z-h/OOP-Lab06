@@ -79,6 +79,7 @@ public final class TestWithExceptions {
              */
             assertNotNull(e.getMessage());
             assertFalse(e.getMessage().isEmpty());
+            System.out.println("C'e un errore comuque");
         }
     }
 }

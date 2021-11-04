@@ -98,7 +98,7 @@ public final class UseCollection {
 			ll.get(ll.size() / 2);
 		}
 		time = System.nanoTime() - time;
-		System.out.println("Add " + ELEMS + " int to the head of LinkedList " + time + "ns (" + time / TO_MS + "ms)");
+		System.out.println("Read " + ELEMS + " int to the head of LinkedList " + time + "ns (" + time / TO_MS + "ms)");
 
 		/*
 		 * 7) Build a new Map that associates to each continent's name its population:
