@@ -18,7 +18,7 @@ public final class BaseRobotTest {
 	 * Simple test for testing a robot moving, wandering the available environment.
 	 * 
 	 */
-	@Test
+	//@Test
 	public void testRobotMovementBase() {
 		/*
 		 * 1) Create a Robot with battery level 100
@@ -80,17 +80,28 @@ public final class BaseRobotTest {
 	 * Simple test for testing robot battery.
 	 * 
 	 */
-	// @Test
+	 @Test
 	public void testRobotBatteryBase() {
 		final Robot r2 = new Robot("SimpleRobot2", 20);
 		/*
 		 * Repeatedly move the robot up and down until the battery is completely
 		 * exhausted.
 		 */
-		while (r2.getBatteryLevel() > 0) {
+		try {
+			while (r2.getBatteryLevel() > 0) {
+				r2.moveUp();
+				r2.moveDown();
+			}
+			
 			r2.moveUp();
 			r2.moveDown();
+			
+			fail("This fail should't be reached");
+		} catch (NotEnoughBatteryException e) {
+			assertNotNull(e.getMessage(), e);
+			System.out.println(e.getMessage());
 		}
+		
 		// verify battery level:
 		// expected, actual, delta (accepted error as we deal with decimal
 		// values: in this case we accept NO ERROR, which is generally bad)
