@@ -35,7 +35,7 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * 
      * think of what type of keys and values would best suit the requirements
      */
-	Map<String, Set<U>> followedUers;
+	private final Map<String, Set<U>> followedUers;
 	
     /*
      * [CONSTRUCTORS]
@@ -65,6 +65,10 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
         super(name, surname, user, userAge);
         followedUers = new HashMap<String, Set<U>>();
     }
+    
+    public SocialNetworkUserImpl(final String name, final String surname, final String user) {
+        this(name, surname, user, -1);
+    }
 
     /*
      * [METHODS]
@@ -90,16 +94,12 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
     //true if person exists, false otherwise
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-    	boolean alreadyFriend = false;
-    	if(groupAlreadyExist(circle)) {
-    		Set<U> friends = new HashSet<U>(followedUers.get(circle));
-    		alreadyFriend = friends.add(user);
-    		followedUers.put(circle, friends);
-    	}else {
-    		followedUers.put(circle, Set.of(user));
+    		Set<U> circlefriends = followedUers.get(circle);
+    		if(circlefriends == null) {
+    			circlefriends = new HashSet<>();
+    			followedUers.put(circle, circlefriends);
     	}
-    		return alreadyFriend;
-        
+    		return circlefriends.add(user);
     }
 
  
