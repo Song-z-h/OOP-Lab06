@@ -1,7 +1,9 @@
 package it.unibo.oop.lab.collections2;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -29,7 +31,8 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * 
      * think of what type of keys and values would best suit the requirements
      */
-
+	Map<String, List<U>> followedUers;
+	
     /*
      * [CONSTRUCTORS]
      * 
@@ -56,6 +59,7 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
         super(name, surname, user, userAge);
+        followedUers = new HashMap<String, List<U>>();
     }
 
     /*
@@ -63,10 +67,27 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * 
      * Implements the methods below
      */
+    private boolean groupAlreadyExist(final String circle) {
+    	return followedUers.containsKey(circle);
+    }
+    
+    private boolean friendAlreadyExist(final String circle, final U user) {
+    	if(groupAlreadyExist(circle)) {
+    		for(var friend : followedUers.get(circle)) {
+    			if(friend.equals(user)) {
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
+    }
 
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        if(friendAlreadyExist(circle, user)) {
+        	return false;
+        }
+        return followedUers.get(circle).add(user);
     }
 
     @Override
