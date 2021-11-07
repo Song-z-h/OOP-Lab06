@@ -1,9 +1,13 @@
 package it.unibo.oop.lab.collections2;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -31,7 +35,7 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * 
      * think of what type of keys and values would best suit the requirements
      */
-	Map<String, List<U>> followedUers;
+	Map<String, Set<U>> followedUers;
 	
     /*
      * [CONSTRUCTORS]
@@ -59,7 +63,7 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
         super(name, surname, user, userAge);
-        followedUers = new HashMap<String, List<U>>();
+        followedUers = new HashMap<String, Set<U>>();
     }
 
     /*
@@ -71,33 +75,49 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
     	return followedUers.containsKey(circle);
     }
     
-    private boolean friendAlreadyExist(final String circle, final U user) {
-    	if(groupAlreadyExist(circle)) {
-    		for(var friend : followedUers.get(circle)) {
-    			if(friend.equals(user)) {
-    				return true;
-    			}
-    		}
-    	}
-    	return false;
-    }
-
+//    private boolean friendAlreadyExist(final U user) {
+//    	for(var entry : followedUers.entrySet()) {
+//    		 for(var friend: entry.getValue()) {
+//    			 if(friend.equals(user)) {
+//    				 return true;
+//    			 }
+//    		 }
+//    	}
+//    	return false;
+//    }
+    
+    
+    //true if person exists, false otherwise
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        if(friendAlreadyExist(circle, user)) {
-        	return false;
-        }
-        return followedUers.get(circle).add(user);
+    	boolean alreadyFriend = false;
+    	if(groupAlreadyExist(circle)) {
+    		Set<U> friends = new HashSet<U>(followedUers.get(circle));
+    		alreadyFriend = friends.add(user);
+    		followedUers.put(circle, friends);
+    	}else {
+    		followedUers.put(circle, Set.of(user));
+    	}
+    		return alreadyFriend;
+        
     }
 
-    @Override
+ 
+	@Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+       if(groupAlreadyExist(groupName)) {
+    	   return new HashSet<U>(followedUers.get(groupName));
+       }
+       return Collections.emptyList();
     }
 
     @Override
     public List<U> getFollowedUsers() {
-        return null;
+       Set<U> allfriends = new HashSet<U>();
+       for(var entry : followedUers.entrySet()) {
+    	   allfriends.addAll(entry.getValue());
+       }
+       return List.copyOf(allfriends);
     }
 
 }
