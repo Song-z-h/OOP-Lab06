@@ -1,7 +1,9 @@
 package it.unibo.oop.lab.exception2;
 
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import org.junit.Test;
 /**
  * JUnit test to test {@link StrictBankAccount}.
  * 
@@ -23,31 +25,31 @@ public final class TestStrictBankAccount {
 		 * gratuite.
 		 */
 
-		BankAccount acc1 = new StrictBankAccount(1, 10000, 10);
 		BankAccount acc2 = new StrictBankAccount(2, 10000, 10);
+		BankAccount acc1 = new StrictBankAccount(1, 10000, 10);
 
 		try {
-			acc1.depositFromATM(3, 1000000);
-
+			acc1.deposit(3, 1);
+			fail();
 		} catch (WrongAccountHolderException | NotEnoughFundsException | TransactionsOverQuotaException e1) {
-			System.out.println(e1);
+			assertNotNull(e1);
 		}
 
 		try {
 			acc1.withdraw(1, 1000000);
-
+			fail();
 		}  catch (WrongAccountHolderException | NotEnoughFundsException | TransactionsOverQuotaException e2) {
-			System.out.println(e2);
+			assertNotNull(e2);
 		}
 
 		try {
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < 11; i++) {
 				acc2.depositFromATM(2, 1);
-
 			}
+			fail("exceeded the maximum amount of ATM transactions");
 
 		}  catch (WrongAccountHolderException | NotEnoughFundsException | TransactionsOverQuotaException e3) {
-			System.out.println(e3);
+			assertNotNull(e3);
 		}
 
 	}
