@@ -15,6 +15,7 @@ public interface Graph<N> {
      * @param node
      *            the node to add
      */
+	
     void addNode(N node);
 
     /**
