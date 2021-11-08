@@ -1,6 +1,7 @@
 package it.unibo.oop.lab06.generics1;
 
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -59,13 +60,26 @@ public class GraphImpl<N> implements Graph<N> {
 		}
 		return new LinkedHashSet<N>(Collections.emptySet());
 	}
-
+	
+	@SafeVarargs
+	private boolean containNodes(final N ...nodesTocheck) {
+		for(final N nodetmp : nodesTocheck) {
+			if(!nodes.containsKey(nodetmp))
+			return false;
+		}
+		return true;
+	}
+		
 	@Override
-	public List<N> getPath(N source, N target) {
+	public List<N> getPath(N source, N target) { 
+		if(!containNodes(source, target)) {
+			return Collections.emptyList();
+		}
+		
 		Set<N> alreadyVisited = new LinkedHashSet<>();
 		Queue<N> nodeToVisit = new LinkedList<>();
 		Map<N, N> itsParent = new LinkedHashMap<>();
-		List<N> path = new LinkedList<>();
+		Deque<N> path = new LinkedList<>();
 		nodeToVisit.add(source);
 
 		while (!nodeToVisit.isEmpty()) {
@@ -86,14 +100,13 @@ public class GraphImpl<N> implements Graph<N> {
 		nodeToVisit.add(target);
 		while(!nodeToVisit.isEmpty()) {
 			N node = nodeToVisit.poll();
-			path.add(node);
+			path.addFirst(node);
 			if(node.equals(source)) {
 				break;
 			}
 			nodeToVisit.add(itsParent.get(node));
 		}
-		Collections.reverse(path);
-		return path;
+		return new LinkedList<>(path);
 	}
 
 }
